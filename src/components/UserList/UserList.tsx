@@ -2,15 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import axios from "axios";
-//import useDebounce from '../../customHooks/useDebounce';
 import { User } from '../../types';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Spinner } from "react-spinners-css";
-// import PersonIcon from "@material-ui/icons/Person";
-// import SearchBar from "../SearchBar/SearchBar";
-import URL from "../../constants/index";
 import "./UserList.css";
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme:any) => ({
   root: {
@@ -32,9 +29,12 @@ const useStyles = makeStyles((theme:any) => ({
   },
 }));
 function UserList() {
+  const storedJwt = localStorage.getItem('jwtToken');
+  const [jwt, setJwt] = useState(storedJwt || null);
   const classes = useStyles();
   const [isUserListUpdated, setIsUserListUpdated] = useState(false);
   const [userList, setUserList] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const userTable = userList.map((item) => (
@@ -85,6 +85,7 @@ function UserList() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get("http://test-ytb-bot.herokuapp.com/user",
           {
@@ -94,10 +95,11 @@ function UserList() {
       .then((response) => {
         const userList = response.data;
         setUserList(userList);
+        setIsLoading(false)
       })      
   }, [isUserListUpdated]);
 
-  return (
+  return jwt ? (
     
     <>
     <div className="cart-container">
@@ -109,11 +111,12 @@ function UserList() {
           </tr>
         </thead>
         <tbody>
-          {userTable}
+          {isLoading ? <Spinner /> : userTable}
         </tbody>
       </table>
     </div>
   </>
-  );
+  ) :
+  (<Redirect to={"/Login"}></Redirect>);
 }
 export default UserList;

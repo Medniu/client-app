@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import URL from "../../constants/index"
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 
@@ -32,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function Login() {
+
     const classes = useStyles();
     let history = useHistory();
     const [email, setEmail] = useState("");
@@ -39,16 +39,13 @@ function Login() {
 
     const onLogin = () =>{
       if (email && password){
-        axios.post("https://test-ytb-bot.herokuapp.com/auth/signIn", {email,password}).then(res => {
+        axios.post("https://test-ytb-bot.herokuapp.com/auth/signIn", {email, password})
+        .then(res => {
           const token =  res.data;
           localStorage.setItem("jwtToken", token);
-          console.log(token);
+          history.push("/Main")
         })
         history.push("/Main")
-      }
-      else {
-        history.push("/Main")
-        // history.push("/Login")
       }
     }
 

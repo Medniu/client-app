@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import axios from "axios";
-//import useDebounce from '../../customHooks/useDebounce';
 import Modal from '@material-ui/core/Modal';
 import UploadVideo from '../UploadVideo/UploadVideo';
-import { User, Video } from '../../types';
+import { Video } from '../../types';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Spinner } from "react-spinners-css";
 import VideocamIcon from '@material-ui/icons/Videocam';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { Redirect } from 'react-router-dom';
 
 function getModalStyle() {
     const top = 50;
@@ -51,12 +50,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function VideoList() {
-
+  const storedJwt = localStorage.getItem('jwtToken');
+  const [jwt, setJwt] = useState(storedJwt || null);
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
   const [isVideoListUpdated, setIsVideoListUpdated] = useState(false);
   const [videoList, setVideoList] = useState<Video[]>([]);
   const [openCreateVideo, setOpenCreateVideo] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   const onCreateUser = () => {
     setOpenCreateVideo(true);
@@ -85,6 +86,7 @@ function VideoList() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get("http://test-ytb-bot.herokuapp.com/videos",
           {
@@ -94,6 +96,7 @@ function VideoList() {
       .then((response) => {
         const videoList = response.data;
         setVideoList(videoList);
+        setIsLoading(false);
       })      
   }, [isVideoListUpdated]);
 
@@ -127,7 +130,7 @@ function VideoList() {
     </tr>
   ));
 
-  return (
+  return jwt ? (
     <>
     <div className="cart-container">
       <h2 className="table-header" >VideoList</h2>
@@ -149,7 +152,7 @@ function VideoList() {
           </tr>
         </thead>
         <tbody>
-          {videoTable}
+          {isLoading ? <Spinner/> : videoTable}
         </tbody>
       </table>
     </div>
@@ -164,6 +167,6 @@ function VideoList() {
         </div>
     </Modal>
   </>
-  );
+  ) : (<Redirect to={"/Login"}></Redirect>);
 }
 export default VideoList;

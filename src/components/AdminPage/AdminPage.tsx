@@ -5,7 +5,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import PersonIcon from "@material-ui/icons/Person"; 
 import VideocamIcon from '@material-ui/icons/Videocam';
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccountRounded";
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AdminPage() {  
+    const storedJwt = localStorage.getItem('jwtToken');
+    const [jwt, setJwt] = useState(storedJwt || null);
     const classes = useStyles();
     let history = useHistory();
     
@@ -70,7 +72,7 @@ function AdminPage() {
         }
     }
 
-    return (        
+    return jwt ? (        
         <div className="adminPage-container">
             <input
                 accept=".txt/*"
@@ -117,6 +119,9 @@ function AdminPage() {
                Video List
             </Button>
         </div>
+    ) : 
+    (
+        <Redirect to={"/Login"}></Redirect>
     );
 }  
 

@@ -8,7 +8,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import URL from "../../constants/index"
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({

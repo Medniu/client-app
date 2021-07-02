@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PersonIcon from '@material-ui/icons/PersonAdd';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import URL from "../../constants/index";
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateUser()
 {
+    const storedJwt = localStorage.getItem('jwtToken');
+    const [jwt, setJwt] = useState(storedJwt || null);
     const classes = useStyles();
     const [channelName, setChannelName] = useState("");
     const [email, setEmail] = useState("");
@@ -42,14 +42,9 @@ function CreateUser()
     let history = useHistory();
 
     const createUser = () => {
-        if(email.includes("@"))
+        if(email.includes("@") && password === repeatedPassword)
         {
-            axios.post("https://test-ytb-bot.herokuapp.com/auth/signUp", {email, password, channelName}
-            // {
-            //   headers: {
-            //   'Authorization': "Bearer "+localStorage.getItem("jwtToken")
-            // }}
-            )
+            axios.post("https://test-ytb-bot.herokuapp.com/auth/signUp", {email, password, channelName})
             .then(res => {
               const token =  res.data;
               localStorage.setItem("jwtToken", token);
@@ -62,8 +57,7 @@ function CreateUser()
           }                    
     }
     
-
-    return (
+    return jwt ? (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -124,7 +118,6 @@ function CreateUser()
               fullWidth
               variant="contained"
               color="primary"
-              // className={classes.submit}
               onClick={() => createUser() } 
             >
               Create User
@@ -132,6 +125,6 @@ function CreateUser()
           </form>
         </div>
       </Container>
-    ); 
+    ) : (<Redirect to={"/Login"}></Redirect>); 
 }
 export default CreateUser;
