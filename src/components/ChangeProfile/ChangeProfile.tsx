@@ -41,7 +41,7 @@ function ChangePassword() {
             alert("Input old password")            
         }  
         if((newPassword === repeatedPassword) && (newPassword.length > 6)){
-            axios.post(URL+"auth/changePassword", {oldPassword, newPassword})
+            axios.post("https://test-ytb-bot.herokuapp.comauth/changePassword", {oldPassword, newPassword})
             .then(responce => {
                 alert("Password changed successfully");
                 history.push("/Main");

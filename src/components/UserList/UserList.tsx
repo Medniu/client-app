@@ -69,7 +69,7 @@ function UserList() {
   const onDeleteClick = (userId:string, userChannelName:string) => { 
     const conf = window.confirm(`Are u sure you want to delete the product ${userChannelName} ?`)
     if(conf === true){
-      axios.delete("http://test-ytb-bot.herokuapp.com/user",
+      axios.delete("https://test-ytb-bot.herokuapp.com/user",
       {
         headers: {
           'Authorization': "Bearer "+localStorage.getItem("jwtToken")
@@ -87,7 +87,7 @@ function UserList() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://test-ytb-bot.herokuapp.com/user",
+      .get("https://test-ytb-bot.herokuapp.com/user",
           {
             headers: {
             'Authorization': "Bearer "+localStorage.getItem("jwtToken"),               

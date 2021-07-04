@@ -70,7 +70,7 @@ function VideoList() {
   const onDeleteClick = (videoId:string, userChannelName:string) => { 
     const conf = window.confirm(`Are u sure you want to delete the video ${userChannelName} ?`)
     if(conf === true){
-      axios.delete("http://test-ytb-bot.herokuapp.com/videos",
+      axios.delete("https://test-ytb-bot.herokuapp.com/videos",
       {
         headers: {
           'Authorization': "Bearer "+localStorage.getItem("jwtToken")
@@ -88,7 +88,7 @@ function VideoList() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://test-ytb-bot.herokuapp.com/videos",
+      .get("https://test-ytb-bot.herokuapp.com/videos",
           {
             headers: {
             'Authorization': "Bearer "+localStorage.getItem("jwtToken"),               

@@ -57,7 +57,7 @@ function AdminPage() {
             const formData = new FormData();
             formData.append("file", file)
 
-            axios.post("http://test-ytb-bot.herokuapp.com/videos/upload", formData,
+            axios.post("https://test-ytb-bot.herokuapp.com/videos/upload", formData,
             {
                 headers: {
                 'Content-Type': "multipart/form-data",
